@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { EVENT_TITLE } from "@/config";
+import "@fontsource/barlow-condensed/700.css";
+import "@fontsource/barlow-condensed/800.css";
 import "./globals.css";
 
 export const metadata: Metadata = {
