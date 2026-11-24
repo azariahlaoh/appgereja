@@ -42,8 +42,8 @@ body {
   from { transform: translateY(-50%); }
   to { transform: translateY(0); }
 }
-.bg-scroll-up { animation: bg-up 48s steps(384) infinite; will-change: transform; }
-.bg-scroll-down { animation: bg-down 56s steps(448) infinite; will-change: transform; }
+.bg-scroll-up { animation: bg-up 70s linear infinite; will-change: transform; }
+.bg-scroll-down { animation: bg-down 85s linear infinite; will-change: transform; }
 
 @media (prefers-reduced-motion: reduce) {
   .bg-scroll-up, .bg-scroll-down, .grain { animation: none; }
