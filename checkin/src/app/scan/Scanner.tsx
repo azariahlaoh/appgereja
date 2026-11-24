@@ -2,6 +2,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { checkIn } from "./actions";
+import { guestStaff } from "../guest/actions";
 import type { Stats } from "@/lib/attendance";
 
 const QrScanner = dynamic(() => import("@yudiel/react-qr-scanner").then((m) => m.Scanner), { ssr: false });
@@ -72,7 +73,11 @@ export default function Scanner({ initial }: { initial: Stats }) {
         autoComplete="off"
         placeholder="Scan di sini (GY:...)"
         className="field"
-        onBlur={() => setTimeout(() => { if (!camera) focus(); }, 50)}
+        onBlur={() => setTimeout(() => {
+          // Re-focus, kecuali user sedang mengetik di input lain (mis. nama guest)
+          const a = document.activeElement;
+          if (!a || a === document.body || a.tagName === "BUTTON") focus();
+        }, 50)}
         onKeyDown={(e) => {
           if (e.key === "Enter") {
             const el = e.currentTarget;
@@ -110,5 +115,35 @@ export default function Scanner({ initial }: { initial: Stats }) {
   );
 }
 
-// Diganti di tahap (d): tombol "Tambah guest".
-function GuestQuick(_: { onDone: (s: Stats) => void }) { return null; }
+function GuestQuick({ onDone }: { onDone: (s: Stats) => void }) {
+  const [open, setOpen] = useState(false);
+  const [name, setName] = useState("");
+  const [msg, setMsg] = useState("");
+  const [pending, setPending] = useState(false);
+
+  async function submit() {
+    if (!name.trim()) return;
+    setPending(true);
+    const r = await guestStaff(name);
+    setPending(false);
+    if (r.error) { setMsg(r.error); return; }
+    onDone(r.stats!);
+    setMsg(`✅ ${r.name} tercatat`);
+    setName("");
+    setOpen(false);
+  }
+
+  return (
+    <div className="space-y-2">
+      {!open && <button onClick={() => { setOpen(true); setMsg(""); }} className="btn-ghost w-full">Tambah guest</button>}
+      {open && (
+        <div className="flex gap-2">
+          <input autoFocus value={name} onChange={(e) => setName(e.target.value)} placeholder="Nama guest" className="field"
+            onKeyDown={(e) => { if (e.key === "Enter") submit(); }} />
+          <button disabled={pending} onClick={submit} className="btn">OK</button>
+        </div>
+      )}
+      {msg && <p className="text-center text-sm text-[#9aa5b8]">{msg}</p>}
+    </div>
+  );
+}
