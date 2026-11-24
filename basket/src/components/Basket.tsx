@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { CATEGORIES, CATEGORY_STYLE, EVENT_TITLE, FORM_URL, TARGET } from "@/config";
+import { CATEGORIES, CATEGORY_LOGO, CATEGORY_STYLE, EVENT_TITLE, FORM_URL, TARGET } from "@/config";
 import PhotoBackground from "@/components/PhotoBackground";
 import type { Peserta } from "@/lib/sheet";
 
@@ -13,6 +13,23 @@ function Arrow() {
       <path d="M4 12h15M13 5l7 7-7 7" />
     </svg>
   );
+}
+
+function Logo({ c, size }: { c: (typeof CATEGORIES)[number]; size: number }) {
+  const src = CATEGORY_LOGO[c];
+  if (!src) {
+    // Luar komunitas: penanda polos
+    return (
+      <span
+        className="grid place-items-center rounded-full border border-lime-300/60 font-display text-[0.7rem] font-bold leading-none text-lime-200"
+        style={{ width: size, height: size }}
+      >
+        +
+      </span>
+    );
+  }
+  // eslint-disable-next-line @next/next/no-img-element
+  return <img src={src} alt="" width={size} height={size} className="shrink-0 object-contain" style={{ width: size, height: size }} />;
 }
 
 export default function Basket() {
@@ -109,7 +126,7 @@ export default function Basket() {
             <p className="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-sm text-neutral-300">
               {perCategory.map(({ c, n }) => (
                 <span key={c} className="flex items-center gap-1.5">
-                  <span className={`h-2 w-2 rounded-full shadow-[0_0_8px_currentColor] ${CATEGORY_STYLE[c].split(" ")[0]} ${CATEGORY_STYLE[c].split(" ")[1]}`} />
+                  <Logo c={c} size={18} />
                   {c} <b className="font-semibold text-white">{n}</b>
                 </span>
               ))}
@@ -136,23 +153,33 @@ export default function Basket() {
           {rows === null && !loadError && <p className="px-1 text-sm text-neutral-500">Memuat…</p>}
           {rows?.length === 0 && <p className="px-1 text-sm text-neutral-500">Belum ada yang daftar.</p>}
           {rows && rows.length > 0 && (
-            <ol className="glass divide-y divide-white/10 rounded-[1.75rem] px-4">
-              {rows.map((r, i) => (
-                <li key={r.id} className="flex items-baseline gap-4 py-3.5">
-                  <span className="w-8 text-right font-display text-3xl font-bold leading-none tabular-nums text-lime">
-                    {i + 1}
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <p className="break-words text-[17px] font-medium leading-tight">{r.name}</p>
-                    {r.detail && <p className="mt-0.5 break-words text-sm text-neutral-400">{r.detail}</p>}
-                  </div>
-                  <span className={`flex shrink-0 items-center gap-1.5 font-display text-base font-semibold uppercase tracking-wide ${CATEGORY_STYLE[r.category].split(" ")[1]}`}>
-                    <span className={`h-2 w-2 rounded-full shadow-[0_0_8px_currentColor] ${CATEGORY_STYLE[r.category].split(" ")[0]}`} />
-                    {r.category}
-                  </span>
-                </li>
-              ))}
-            </ol>
+            <div className="glass overflow-hidden rounded-[1.75rem]">
+              {/* Header kolom */}
+              <div className="grid grid-cols-[2.75rem_1fr_7.5rem] bg-white/[0.06] font-display text-sm font-bold uppercase tracking-[0.14em] text-neutral-400">
+                <span className="px-2 py-2 text-center">No</span>
+                <span className="border-l border-white/10 px-3 py-2">Nama</span>
+                <span className="border-l border-white/10 px-3 py-2">Komunitas</span>
+              </div>
+              <ol>
+                {rows.map((r, i) => (
+                  <li key={r.id} className="grid grid-cols-[2.75rem_1fr_7.5rem] border-t border-white/10">
+                    <span className="flex items-center justify-center px-2 py-3 font-display text-2xl font-bold leading-none tabular-nums text-lime">
+                      {i + 1}
+                    </span>
+                    <div className="flex min-w-0 flex-col justify-center border-l border-white/10 px-3 py-3">
+                      <p className="break-words text-[16px] font-medium leading-tight">{r.name}</p>
+                      {r.detail && <p className="mt-0.5 break-words text-[13px] leading-snug text-neutral-400">{r.detail}</p>}
+                    </div>
+                    <div className="flex items-center gap-2 border-l border-white/10 px-3 py-3">
+                      <Logo c={r.category} size={26} />
+                      <span className={`font-display text-[0.95rem] font-semibold uppercase leading-[1.05] tracking-wide ${CATEGORY_STYLE[r.category].split(" ")[1]}`}>
+                        {r.category}
+                      </span>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </div>
           )}
         </section>
       </main>

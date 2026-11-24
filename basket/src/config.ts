@@ -19,6 +19,14 @@ export const CATEGORY_STYLE: Record<Category, string> = {
   "Luar komunitas": "bg-lime-300 text-lime-200",
 };
 
+// Logo komunitas (public/logo). Luar komunitas tidak punya logo.
+export const CATEGORY_LOGO: Record<Category, string | null> = {
+  Youth: "/logo/youth.png",
+  College: "/logo/college.png",
+  Cool: "/logo/cool.png",
+  "Luar komunitas": null,
+};
+
 export const FORM_URL = "https://forms.gle/nCCyMemwBSW7J7Gp9";
 export const SHEET_ID = "14ztDMrMDGEzFAs0NnDyB7D4QKHjtKvUv42p8dalQRWc";
 export const SHEET_NAME = "Form Responses 1";
