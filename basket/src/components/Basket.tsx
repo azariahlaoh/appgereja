@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { CATEGORIES, CATEGORY_LOGO, CATEGORY_STYLE, EVENT_INFO, EVENT_TITLE, FORM_URL, TARGET } from "@/config";
+import { CATEGORIES, CATEGORY_LOGO, CATEGORY_STYLE, EVENT_DATE, EVENT_END_HOUR, EVENT_INFO, EVENT_TITLE, FORM_URL, TARGET } from "@/config";
 import PhotoBackground from "@/components/PhotoBackground";
 import type { Peserta } from "@/lib/sheet";
 
@@ -29,7 +29,36 @@ function Logo({ c, size }: { c: (typeof CATEGORIES)[number]; size: number }) {
   return <img src={src} alt="" width={size} height={size} className="shrink-0 object-contain" style={{ width: size, height: size }} />;
 }
 
+// Label hitung mundur berdasarkan tanggal & jam di WIB (Asia/Jakarta).
+function countdownLabel(now = new Date()): string {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Jakarta",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    hourCycle: "h23",
+  }).formatToParts(now);
+  const get = (t: string) => parts.find((p) => p.type === t)!.value;
+  const today = Date.UTC(+get("year"), +get("month") - 1, +get("day"));
+  const [y, m, d] = EVENT_DATE.split("-").map(Number);
+  const days = Math.round((Date.UTC(y, m - 1, d) - today) / 86_400_000);
+  if (days > 1) return `${days} hari lagi`;
+  if (days === 1) return "Besok!";
+  if (days === 0) return +get("hour") >= EVENT_END_HOUR ? "Sudah selesai" : "Hari ini!";
+  return "Sudah selesai";
+}
+
 export default function Basket() {
+  const [countdown, setCountdown] = useState<string | null>(null);
+  useEffect(() => {
+    // Dihitung di browser supaya tidak basi pada halaman yang di-prerender.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setCountdown(countdownLabel());
+    const t = setInterval(() => setCountdown(countdownLabel()), 60_000);
+    return () => clearInterval(t);
+  }, []);
+
   const [rows, setRows] = useState<Peserta[] | null>(null);
   const [loadError, setLoadError] = useState(false);
 
@@ -94,6 +123,11 @@ export default function Basket() {
               <path d="M12 7v5l3 2" />
             </svg>
             {EVENT_INFO.when}
+            {countdown && (
+              <span className="ml-auto shrink-0 rounded-full bg-lime px-3 py-0.5 font-display text-base font-extrabold uppercase leading-6 tracking-wide text-black shadow-[0_0_18px_rgba(212,255,31,0.45)]">
+                {countdown}
+              </span>
+            )}
           </p>
           <a
             href={EVENT_INFO.mapsUrl}

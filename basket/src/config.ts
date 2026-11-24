@@ -1,6 +1,10 @@
 export const EVENT_TITLE = "🏀 Basket 27 Nov";
 export const TARGET = 15;
 
+// Tanggal event (WIB) untuk hitung mundur.
+export const EVENT_DATE = "2026-11-27"; // YYYY-MM-DD
+export const EVENT_END_HOUR = 20; // setelah jam ini (WIB) dianggap selesai
+
 export const EVENT_INFO = {
   when: "Jumat, 27 Nov · 18.00 – 20.00",
   place: "Grafika Sports Arena, Lebak Bulus",
