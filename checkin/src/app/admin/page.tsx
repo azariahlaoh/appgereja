@@ -1,6 +1,6 @@
 import { db } from "@/lib/db";
 import { isStaff } from "@/lib/auth";
-import { timeJakarta, todayJakarta } from "@/lib/util";
+import { normalizePhone, timeJakarta, todayJakarta } from "@/lib/util";
 import StaffLogin from "@/components/StaffLogin";
 import { logoutStaff } from "../scan/actions";
 import { deleteAnnouncement, saveAnnouncement } from "./actions";
@@ -27,9 +27,10 @@ function AnnForm({ a }: { a?: A }) {
   );
 }
 
-export default async function Admin({ searchParams }: { searchParams: Promise<{ tgl?: string }> }) {
+export default async function Admin({ searchParams }: { searchParams: Promise<{ tgl?: string; q?: string }> }) {
   if (!(await isStaff())) return <StaffLogin />;
-  const { tgl } = await searchParams;
+  const { tgl, q: qRaw } = await searchParams;
+  const q = (qRaw ?? "").replace(/[%,()*\\]/g, " ").trim().slice(0, 60);
   const date = tgl && /^\d{4}-\d{2}-\d{2}$/.test(tgl) ? tgl : todayJakarta();
   const supabase = db();
 
@@ -39,6 +40,14 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
     supabase.from("attendance").select("checked_in_at, members(full_name, type, is_new)")
       .eq("service_date", date).order("checked_in_at"),
   ]);
+  let found: { full_name: string; type: string; phone: string | null; token: string }[] = [];
+  if (q) {
+    const digits = normalizePhone(q) ?? q.replace(/\D/g, "");
+    const filter = digits.length >= 5 ? `full_name.ilike.%${q}%,phone.ilike.%${digits}%` : `full_name.ilike.%${q}%`;
+    const { data } = await supabase.from("members").select("full_name, type, phone, token").or(filter).order("full_name").limit(20);
+    found = data ?? [];
+  }
+  const site = (process.env.NEXT_PUBLIC_SITE_URL ?? "").replace(/\/$/, "");
   const rows = ((att ?? []) as Row[]).map((r) => {
     const m = (Array.isArray(r.members) ? r.members[0] : r.members) as Mem;
     return { ...m, time: timeJakarta(r.checked_in_at) };
@@ -52,6 +61,30 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
         <h1 className="text-2xl font-bold">Admin</h1>
         <form action={logoutStaff}><button className="btn-ghost text-sm">Keluar</button></form>
       </div>
+
+      <section className="space-y-3">
+        <h2 className="text-lg font-bold">Cari jemaat / kirim ulang QR</h2>
+        <form className="flex gap-2">
+          <input name="q" defaultValue={q} placeholder="Nama atau no. WA" className="field" />
+          <button className="btn-ghost">Cari</button>
+        </form>
+        {q && found.length === 0 && <p className="text-sm text-[#9aa5b8]">Tidak ketemu.</p>}
+        <ul className="divide-y divide-[#2a3344] rounded-xl border border-[#2a3344] empty:hidden">
+          {found.map((m) => {
+            const link = `${site}/m/${m.token}`;
+            const wa = m.phone ? `https://wa.me/${m.phone}?text=${encodeURIComponent(`Halo ${m.full_name}, ini QR check-in Grow Youth kamu: ${link}`)}` : null;
+            return (
+              <li key={m.token} className="space-y-1 p-3 text-sm">
+                <div>{m.full_name}{m.type === "guest" && " (guest)"} <span className="text-[#9aa5b8]">{m.phone}</span></div>
+                <div className="flex gap-3">
+                  <a href={`/m/${m.token}`} target="_blank" className="underline">Buka QR</a>
+                  {wa && <a href={wa} target="_blank" className="underline">Kirim via WhatsApp</a>}
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      </section>
 
       <section className="space-y-3">
         <h2 className="text-lg font-bold">Rekap kehadiran</h2>
