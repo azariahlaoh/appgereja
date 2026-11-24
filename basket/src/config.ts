@@ -12,10 +12,10 @@ export const DETAIL_FIELD: Record<Category, { label: string; placeholder: string
 };
 
 export const CATEGORY_STYLE: Record<Category, string> = {
-  Youth: "bg-sky-500/15 text-sky-300 ring-sky-500/30",
-  College: "bg-violet-500/15 text-violet-300 ring-violet-500/30",
-  Cool: "bg-amber-500/15 text-amber-300 ring-amber-500/30",
-  "Luar komunitas": "bg-emerald-500/15 text-emerald-300 ring-emerald-500/30",
+  Youth: "bg-sky-400/10 text-sky-300 ring-sky-400/40",
+  College: "bg-orange-400/10 text-orange-300 ring-orange-400/40",
+  Cool: "bg-fuchsia-400/10 text-fuchsia-300 ring-fuchsia-400/40",
+  "Luar komunitas": "bg-lime-300/10 text-lime-200 ring-lime-300/40",
 };
 
 export const FORM_URL = "https://forms.gle/nCCyMemwBSW7J7Gp9";
