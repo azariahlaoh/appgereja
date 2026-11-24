@@ -17,3 +17,7 @@ export const CATEGORY_STYLE: Record<Category, string> = {
   Cool: "bg-amber-500/15 text-amber-300 ring-amber-500/30",
   "Luar komunitas": "bg-emerald-500/15 text-emerald-300 ring-emerald-500/30",
 };
+
+export const FORM_URL = "https://forms.gle/nCCyMemwBSW7J7Gp9";
+export const SHEET_ID = "14ztDMrMDGEzFAs0NnDyB7D4QKHjtKvUv42p8dalQRWc";
+export const SHEET_NAME = "Form Responses 1";
