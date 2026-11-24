@@ -11,11 +11,12 @@ export const DETAIL_FIELD: Record<Category, { label: string; placeholder: string
   "Luar komunitas": null,
 };
 
+// Warna titik + label kategori (selaras emoji di form: biru/oranye/ungu).
 export const CATEGORY_STYLE: Record<Category, string> = {
-  Youth: "bg-sky-400/10 text-sky-300 ring-sky-400/40",
-  College: "bg-orange-400/10 text-orange-300 ring-orange-400/40",
-  Cool: "bg-fuchsia-400/10 text-fuchsia-300 ring-fuchsia-400/40",
-  "Luar komunitas": "bg-lime-300/10 text-lime-200 ring-lime-300/40",
+  Youth: "bg-sky-400 text-sky-300",
+  College: "bg-orange-400 text-orange-300",
+  Cool: "bg-fuchsia-400 text-fuchsia-300",
+  "Luar komunitas": "bg-lime-300 text-lime-200",
 };
 
 export const FORM_URL = "https://forms.gle/nCCyMemwBSW7J7Gp9";

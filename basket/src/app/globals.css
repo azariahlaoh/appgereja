@@ -1,15 +1,17 @@
 @import "tailwindcss";
 
+@theme {
+  --font-display: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --font-sans: "Barlow", system-ui, sans-serif;
+  --color-lime: #d4ff1f;
+}
+
 :root {
   color-scheme: dark;
-  --lime: #d4ff1f;
 }
 
 body {
-  background:
-    radial-gradient(60rem 28rem at 50% -8rem, rgba(212, 255, 31, 0.14), transparent 70%),
-    #090a0b;
-  background-attachment: fixed;
-  color: #f3f4f6;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  background: #0a0a0a;
+  color: #f2f2f2;
+  font-family: var(--font-sans);
 }

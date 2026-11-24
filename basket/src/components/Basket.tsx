@@ -5,42 +5,12 @@ import { CATEGORIES, CATEGORY_STYLE, EVENT_TITLE, FORM_URL, TARGET } from "@/con
 import type { Peserta } from "@/lib/sheet";
 
 const REFRESH_MS = 30_000;
-const LIME = "#d4ff1f";
 
 function Arrow() {
   return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-      <path d="M5 12h14M13 6l6 6-6 6" />
+    <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="square" aria-hidden>
+      <path d="M4 12h15M13 5l7 7-7 7" />
     </svg>
-  );
-}
-
-function Ring({ count, reached }: { count: number | null; reached: boolean }) {
-  const r = 78;
-  const c = 2 * Math.PI * r;
-  const pct = Math.min(1, (count ?? 0) / TARGET);
-  return (
-    <div className="relative mx-auto h-56 w-56">
-      <svg viewBox="0 0 200 200" className="h-full w-full -rotate-90">
-        <circle cx="100" cy="100" r={r} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="16" />
-        <circle
-          cx="100"
-          cy="100"
-          r={r}
-          fill="none"
-          stroke={LIME}
-          strokeWidth="16"
-          strokeLinecap="round"
-          strokeDasharray={c}
-          strokeDashoffset={c * (1 - pct)}
-          style={{ transition: "stroke-dashoffset .8s ease", filter: reached ? `drop-shadow(0 0 10px ${LIME})` : undefined }}
-        />
-      </svg>
-      <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="text-6xl font-black leading-none tabular-nums">{count ?? "–"}</span>
-        <span className="mt-2 text-sm font-medium text-gray-400">/ {TARGET} minimal</span>
-      </div>
-    </div>
   );
 }
 
@@ -77,89 +47,98 @@ export default function Basket() {
     [rows],
   );
 
-  const cta =
-    "flex w-full items-center justify-between rounded-full bg-[#d4ff1f] px-6 py-4 text-base font-extrabold uppercase tracking-wide text-black shadow-[0_0_30px_rgba(212,255,31,0.25)] active:scale-[0.98] transition";
+  // "🏀 Basket 13 Nov" -> emoji dipisah, 2 kata terakhir (tanggal) jadi lime
+  const emoji = EVENT_TITLE.match(/^\p{Extended_Pictographic}/u)?.[0] ?? "";
+  const words = EVENT_TITLE.replace(emoji, "").trim().split(" ");
+  const head = words.slice(0, -2).join(" ");
+  const date = words.slice(-2).join(" ");
 
   return (
-    <main className="mx-auto w-full max-w-md px-4 pb-12 pt-6">
-      <div className="flex items-center justify-between text-[11px] font-semibold uppercase tracking-[0.2em] text-gray-400">
-        <span className="flex items-center gap-2">
-          <span className="h-2 w-2 rounded-full bg-[#d4ff1f] shadow-[0_0_8px_#d4ff1f]" />
-          Rekap peserta
-        </span>
-        <span>Live</span>
-      </div>
+    <main className="mx-auto w-full max-w-md px-5 pb-14 pt-6">
+      <p className="flex items-center justify-between text-xs font-semibold uppercase tracking-[0.18em] text-neutral-500">
+        <span>{emoji} Rekap peserta</span>
+        <span>Update tiap 30 dtk</span>
+      </p>
 
-      <h1 className="mt-4 text-5xl font-black uppercase leading-[0.95] tracking-tight">
-        {EVENT_TITLE.replace("🏀", "").trim().split(" ").map((w, i, a) => (
-          <span key={i} className={i === a.length - 1 || /^\d/.test(w) ? "text-[#d4ff1f]" : ""}>
-            {w}{" "}
-          </span>
-        ))}
-        <span aria-hidden>🏀</span>
+      <h1 className="mt-3 font-display text-[5.5rem] font-extrabold uppercase leading-[0.82] tracking-tight">
+        {head}
+        <br />
+        <span className="text-lime">{date}</span>
       </h1>
 
       {/* Counter */}
-      <section className="mt-6 rounded-[2rem] border border-white/10 bg-white/[0.04] p-6">
-        <Ring count={count} reached={reached} />
+      <section className="mt-8 border-t border-white/15 pt-5">
+        <div className="flex items-end gap-3">
+          <span className="font-display text-[9rem] font-extrabold leading-[0.78] tabular-nums">
+            {count ?? "–"}
+          </span>
+          <span className="pb-1 font-display text-3xl font-bold uppercase leading-none text-neutral-500">
+            / {TARGET}
+            <br />
+            minimal
+          </span>
+        </div>
+
+        <div className="mt-5 grid gap-1" style={{ gridTemplateColumns: `repeat(${TARGET}, minmax(0, 1fr))` }}>
+          {Array.from({ length: TARGET }, (_, i) => (
+            <span
+              key={i}
+              className={`h-7 ${i < (count ?? 0) ? "bg-lime" : "bg-white/10"}`}
+              style={{ transform: "skewX(-14deg)" }}
+            />
+          ))}
+        </div>
+
         {count !== null && (
-          <p
-            className={`mt-5 text-center text-base font-bold ${
-              reached ? "text-[#d4ff1f]" : "text-gray-300"
-            }`}
-          >
-            {reached
-              ? `✅ Minimal ${TARGET} tercapai, jadi jalan!`
-              : `Kurang ${TARGET - count} orang lagi biar jalan`}
+          <p className={`mt-4 font-display text-2xl font-bold uppercase ${reached ? "text-lime" : "text-neutral-300"}`}>
+            {reached ? `✅ Minimal ${TARGET} tercapai, jadi jalan!` : `Kurang ${TARGET - count} orang lagi biar jalan`}
           </p>
         )}
+
         {perCategory.length > 0 && (
-          <div className="mt-5 grid grid-cols-2 gap-2">
+          <p className="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-sm text-neutral-400">
             {perCategory.map(({ c, n }) => (
-              <div key={c} className="rounded-2xl border border-white/10 bg-black/40 px-4 py-3">
-                <p className="text-2xl font-black tabular-nums">{n}</p>
-                <p className={`mt-0.5 text-xs font-semibold uppercase tracking-wide ${CATEGORY_STYLE[c].split(" ")[1]}`}>
-                  {c}
-                </p>
-              </div>
+              <span key={c} className="flex items-center gap-1.5">
+                <span className={`h-2 w-2 ${CATEGORY_STYLE[c].split(" ")[0]}`} />
+                {c} <b className="font-semibold text-white">{n}</b>
+              </span>
             ))}
-          </div>
+          </p>
         )}
       </section>
 
-      <a href={FORM_URL} target="_blank" rel="noopener noreferrer" className={`${cta} mt-5`}>
+      <a
+        href={FORM_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="mt-7 flex items-center justify-between bg-lime px-5 py-4 font-display text-2xl font-extrabold uppercase text-black active:opacity-80"
+      >
         Daftar sekarang
         <Arrow />
       </a>
 
       {/* List */}
-      <section className="mt-9">
-        <div className="mb-3 flex items-center gap-3">
-          <h2 className="text-sm font-extrabold uppercase tracking-[0.15em]">Peserta</h2>
-          <span className="h-px flex-1 bg-white/15" />
-          <span className="text-xs text-gray-400">{count ?? 0} orang</span>
-        </div>
-        {loadError && (
-          <p className="mb-2 rounded-2xl bg-red-500/10 px-4 py-3 text-sm text-red-300">
-            Gagal memuat daftar. Akan dicoba lagi otomatis.
-          </p>
-        )}
-        {rows === null && !loadError && <p className="text-sm text-gray-500">Memuat…</p>}
-        {rows?.length === 0 && <p className="text-sm text-gray-500">Belum ada yang daftar.</p>}
-        <ol className="space-y-2">
+      <section className="mt-10">
+        <h2 className="border-b border-white/15 pb-2 font-display text-xl font-bold uppercase tracking-wide text-neutral-400">
+          Peserta
+        </h2>
+        {loadError && <p className="mt-3 text-sm text-red-400">Gagal memuat daftar. Dicoba lagi otomatis.</p>}
+        {rows === null && !loadError && <p className="mt-3 text-sm text-neutral-500">Memuat…</p>}
+        {rows?.length === 0 && <p className="mt-3 text-sm text-neutral-500">Belum ada yang daftar.</p>}
+        <ol>
           {rows?.map((r, i) => (
-            <li
-              key={r.id}
-              className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3"
-            >
-              <span className="w-7 text-right text-lg font-black tabular-nums text-[#d4ff1f]">{i + 1}</span>
+            <li key={r.id} className="flex items-baseline gap-4 border-b border-white/10 py-3">
+              <span className="w-8 text-right font-display text-3xl font-bold leading-none tabular-nums text-lime">
+                {i + 1}
+              </span>
               <div className="min-w-0 flex-1">
-                <p className="break-words font-semibold">{r.name}</p>
-                {r.detail && <p className="break-words text-xs text-gray-400">{r.detail}</p>}
+                <p className="break-words text-lg font-medium leading-tight">{r.name}</p>
+                {r.detail && <p className="mt-0.5 break-words text-sm text-neutral-500">{r.detail}</p>}
               </div>
               <span
-                className={`shrink-0 rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wide ring-1 ${CATEGORY_STYLE[r.category]}`}
+                className={`flex shrink-0 items-center gap-1.5 font-display text-base font-semibold uppercase tracking-wide ${CATEGORY_STYLE[r.category].split(" ")[1]}`}
               >
+                <span className={`h-2 w-2 ${CATEGORY_STYLE[r.category].split(" ")[0]}`} />
                 {r.category}
               </span>
             </li>
@@ -167,21 +146,13 @@ export default function Basket() {
         </ol>
       </section>
 
-      <div className="mt-9 rounded-[2rem] bg-[#d4ff1f] p-6 text-black">
-        <p className="text-2xl font-black uppercase leading-tight">Belum daftar?</p>
-        <p className="mt-1 text-sm font-medium text-black/70">
-          Isi form, daftar di atas otomatis ter-update.
-        </p>
-        <a
-          href={FORM_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-4 flex w-full items-center justify-between rounded-full bg-black px-6 py-3.5 text-sm font-extrabold uppercase tracking-wide text-white"
-        >
-          Isi form
-          <Arrow />
+      <p className="mt-8 text-sm text-neutral-500">
+        Belum terdaftar?{" "}
+        <a href={FORM_URL} target="_blank" rel="noopener noreferrer" className="text-lime underline underline-offset-4">
+          Isi form pendaftaran
         </a>
-      </div>
+        .
+      </p>
     </main>
   );
 }
