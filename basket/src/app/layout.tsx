@@ -13,10 +13,10 @@ const siteUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: EVENT_TITLE,
-  description: "Basket Registration: lihat siapa yang sudah daftar dan daftar sekarang.",
+  description: "Jumat, 27 Nov · 18.00 – 20.00 · Grafika Sports Arena, Lebak Bulus. Lihat siapa yang sudah daftar dan daftar sekarang.",
   openGraph: {
     title: EVENT_TITLE,
-    description: "Basket Registration: lihat siapa yang sudah daftar dan daftar sekarang.",
+    description: "Jumat, 27 Nov · 18.00 – 20.00 · Grafika Sports Arena, Lebak Bulus. Lihat siapa yang sudah daftar dan daftar sekarang.",
     images: [{ url: "/bg/1.jpg", width: 640, height: 520 }],
     locale: "id_ID",
     type: "website",

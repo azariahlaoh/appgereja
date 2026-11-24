@@ -1,5 +1,11 @@
-export const EVENT_TITLE = "🏀 Basket 13 Nov";
+export const EVENT_TITLE = "🏀 Basket 27 Nov";
 export const TARGET = 15;
+
+export const EVENT_INFO = {
+  when: "Jumat, 27 Nov · 18.00 – 20.00",
+  place: "Grafika Sports Arena, Lebak Bulus",
+  mapsUrl: "https://maps.app.goo.gl/Aaeh8bMFWUNWCn3U9",
+};
 
 export const CATEGORIES = ["Youth", "College", "Cool", "Belum bergabung"] as const;
 export type Category = (typeof CATEGORIES)[number];
@@ -27,6 +33,6 @@ export const CATEGORY_LOGO: Record<Category, string | null> = {
   "Belum bergabung": null,
 };
 
-export const FORM_URL = "https://forms.gle/nCCyMemwBSW7J7Gp9";
-export const SHEET_ID = "14ztDMrMDGEzFAs0NnDyB7D4QKHjtKvUv42p8dalQRWc";
+export const FORM_URL = "https://forms.gle/hMYPRh6GLWmZhPcr7";
+export const SHEET_ID = "1aCbDHcrrc4QKGrmKdDl2oLIIPN5uSZ1AdFknzqrwlzE";
 export const SHEET_NAME = "Form Responses 1";

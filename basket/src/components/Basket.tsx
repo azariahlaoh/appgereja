@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { CATEGORIES, CATEGORY_LOGO, CATEGORY_STYLE, EVENT_TITLE, FORM_URL, TARGET } from "@/config";
+import { CATEGORIES, CATEGORY_LOGO, CATEGORY_STYLE, EVENT_INFO, EVENT_TITLE, FORM_URL, TARGET } from "@/config";
 import PhotoBackground from "@/components/PhotoBackground";
 import type { Peserta } from "@/lib/sheet";
 
@@ -86,8 +86,31 @@ export default function Basket() {
           <span className="glow-text text-lime">{date}</span>
         </h1>
 
+        {/* Jadwal & lokasi */}
+        <div className="mt-5 space-y-1.5 text-[15px] text-neutral-200">
+          <p className="flex items-center gap-2">
+            <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0 text-lime" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <circle cx="12" cy="12" r="9" />
+              <path d="M12 7v5l3 2" />
+            </svg>
+            {EVENT_INFO.when}
+          </p>
+          <a
+            href={EVENT_INFO.mapsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 underline decoration-white/30 underline-offset-4 active:opacity-70"
+          >
+            <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0 text-lime" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z" />
+              <circle cx="12" cy="10" r="2.5" />
+            </svg>
+            {EVENT_INFO.place}
+          </a>
+        </div>
+
         {/* Counter */}
-        <section className="glass mt-8 rounded-[1.75rem] p-5">
+        <section className="glass mt-6 rounded-[1.75rem] p-5">
           <div className="flex items-end gap-3">
             <span className={`font-display text-[8.5rem] font-extrabold leading-[0.78] tabular-nums ${reached ? "glow-text text-lime" : ""}`}>
               {count ?? "–"}
