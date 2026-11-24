@@ -47,7 +47,7 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
     const { data } = await supabase.from("members").select("full_name, type, phone, token").or(filter).order("full_name").limit(20);
     found = data ?? [];
   }
-  const site = (process.env.NEXT_PUBLIC_SITE_URL ?? "").replace(/\/$/, "");
+  const site = ((process.env.SITE_URL ?? process.env.NEXT_PUBLIC_SITE_URL ?? "")).replace(/\/$/, "");
   const rows = ((att ?? []) as Row[]).map((r) => {
     const m = (Array.isArray(r.members) ? r.members[0] : r.members) as Mem;
     return { ...m, time: timeJakarta(r.checked_in_at) };

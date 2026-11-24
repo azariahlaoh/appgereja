@@ -9,7 +9,7 @@ MVP check-in ibadah: daftar → dapat QR → di-scan staff. 100% gratis (Vercel 
 3. `cp .env.example .env.local`, isi:
    - `SUPABASE_URL` & `SUPABASE_SERVICE_ROLE_KEY` (Project Settings → API; **service role = rahasia**, jangan dipublish)
    - `STAFF_PIN` (PIN untuk `/scan` & `/admin`)
-   - `NEXT_PUBLIC_SITE_URL` (URL situs)
+   - `SITE_URL` (URL situs)
 4. `npm install && npm run dev` → buka http://localhost:3000
 5. (opsional) `npm run seed` untuk 3 data tes.
 6. Deploy: push ke GitHub → import di Vercel (**Root Directory: `checkin`**) → isi env vars yang sama.
