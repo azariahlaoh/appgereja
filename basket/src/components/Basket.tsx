@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { CATEGORIES, CATEGORY_STYLE, EVENT_TITLE, FORM_URL, TARGET } from "@/config";
+import PhotoBackground from "@/components/PhotoBackground";
 import type { Peserta } from "@/lib/sheet";
 
 const REFRESH_MS = 30_000;
@@ -54,12 +55,7 @@ export default function Basket() {
 
   return (
     <>
-      {/* Latar gradient mesh: bahan blur untuk efek glass */}
-      <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-        <div className="absolute -left-24 -top-24 h-96 w-96 rounded-full bg-lime/30 blur-[110px]" />
-        <div className="absolute -right-32 top-[28rem] h-96 w-96 rounded-full bg-sky-500/25 blur-[120px]" />
-        <div className="absolute -left-20 top-[62rem] h-96 w-96 rounded-full bg-fuchsia-500/20 blur-[120px]" />
-      </div>
+      <PhotoBackground />
 
       <main className="mx-auto w-full max-w-md px-5 pb-14 pt-7">
         <p className="flex items-center justify-between text-xs font-semibold uppercase tracking-[0.18em] text-neutral-400">

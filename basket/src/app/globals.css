@@ -31,3 +31,19 @@ body {
 .glow-text {
   text-shadow: 0 0 28px rgba(212, 255, 31, 0.55);
 }
+
+/* Foto latar auto-scroll */
+@keyframes bg-up {
+  from { transform: translateY(0); }
+  to { transform: translateY(-50%); }
+}
+@keyframes bg-down {
+  from { transform: translateY(-50%); }
+  to { transform: translateY(0); }
+}
+.bg-scroll-up { animation: bg-up 70s linear infinite; will-change: transform; }
+.bg-scroll-down { animation: bg-down 85s linear infinite; will-change: transform; }
+
+@media (prefers-reduced-motion: reduce) {
+  .bg-scroll-up, .bg-scroll-down { animation: none; }
+}
