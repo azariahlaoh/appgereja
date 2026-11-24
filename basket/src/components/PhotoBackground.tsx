@@ -50,7 +50,7 @@ export default function PhotoBackground() {
         <div className="absolute -right-32 top-[28rem] h-96 w-96 rounded-full bg-sky-500/20 blur-[120px]" />
       </div>
       {/* Grain di atas semuanya (statis, tidak menghalangi klik) */}
-      <div aria-hidden className="grain pointer-events-none fixed inset-0 z-50" />
+      <div aria-hidden className="grain pointer-events-none fixed z-50" />
     </>
   );
 }

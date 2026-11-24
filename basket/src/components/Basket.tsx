@@ -18,13 +18,10 @@ function Arrow() {
 function Logo({ c, size }: { c: (typeof CATEGORIES)[number]; size: number }) {
   const src = CATEGORY_LOGO[c];
   if (!src) {
-    // Luar komunitas: penanda polos
+    // Belum bergabung: bullet point polos
     return (
-      <span
-        className="grid place-items-center rounded-full border border-lime-300/60 font-display text-[0.7rem] font-bold leading-none text-lime-200"
-        style={{ width: size, height: size }}
-      >
-        +
+      <span className="grid shrink-0 place-items-center" style={{ width: size, height: size }}>
+        <span className="h-2 w-2 rounded-full bg-lime-300 shadow-[0_0_8px_rgba(190,242,100,0.8)]" />
       </span>
     );
   }
@@ -76,7 +73,7 @@ export default function Basket() {
 
       <main className="mx-auto w-full max-w-md px-5 pb-14 pt-7">
         <p className="flex items-center justify-between text-xs font-semibold uppercase tracking-[0.18em] text-neutral-400">
-          <span>{emoji} Rekap peserta</span>
+          <span>{emoji} Basket Registration</span>
           <span className="flex items-center gap-1.5">
             <span className="h-1.5 w-1.5 rounded-full bg-lime shadow-[0_0_10px_2px_rgba(212,255,31,0.8)]" />
             Live
@@ -155,19 +152,19 @@ export default function Basket() {
           {rows && rows.length > 0 && (
             <div className="glass overflow-hidden rounded-[1.75rem]">
               {/* Header kolom */}
-              <div className="grid grid-cols-[2.75rem_1fr_7.5rem] bg-white/[0.06] font-display text-sm font-bold uppercase tracking-[0.14em] text-neutral-400">
+              <div className="grid grid-cols-[2.5rem_1fr_8.5rem] bg-white/[0.06] font-display text-sm font-bold uppercase tracking-[0.14em] text-neutral-400">
                 <span className="px-2 py-2 text-center">No</span>
                 <span className="border-l border-white/10 px-3 py-2">Nama</span>
                 <span className="border-l border-white/10 px-3 py-2">Komunitas</span>
               </div>
               <ol>
                 {rows.map((r, i) => (
-                  <li key={r.id} className="grid grid-cols-[2.75rem_1fr_7.5rem] border-t border-white/10">
+                  <li key={r.id} className="grid grid-cols-[2.5rem_1fr_8.5rem] border-t border-white/10">
                     <span className="flex items-center justify-center px-2 py-3 font-display text-2xl font-bold leading-none tabular-nums text-lime">
                       {i + 1}
                     </span>
                     <div className="flex min-w-0 flex-col justify-center border-l border-white/10 px-3 py-3">
-                      <p className="break-words text-[16px] font-medium leading-tight">{r.name}</p>
+                      <p className="break-words font-serif text-[1.45rem] italic leading-[1.1] tracking-[0.005em]">{r.name}</p>
                       {r.detail && <p className="mt-0.5 break-words text-[13px] leading-snug text-neutral-400">{r.detail}</p>}
                     </div>
                     <div className="flex items-center gap-2 border-l border-white/10 px-3 py-3">

@@ -46,7 +46,7 @@ function toCategory(huddleApa: string): Category | null {
   if (s.includes("YOUTH")) return "Youth";
   if (s.includes("COLLEGE")) return "College";
   if (s.includes("COOL")) return "Cool";
-  if (s.includes("BELUM")) return "Luar komunitas";
+  if (s.includes("BELUM")) return "Belum bergabung";
   return null;
 }
 

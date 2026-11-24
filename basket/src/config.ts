@@ -1,14 +1,14 @@
 export const EVENT_TITLE = "🏀 Basket 13 Nov";
 export const TARGET = 15;
 
-export const CATEGORIES = ["Youth", "College", "Cool", "Luar komunitas"] as const;
+export const CATEGORIES = ["Youth", "College", "Cool", "Belum bergabung"] as const;
 export type Category = (typeof CATEGORIES)[number];
 
 export const DETAIL_FIELD: Record<Category, { label: string; placeholder: string } | null> = {
   Youth: { label: "Huddle kelas berapa?", placeholder: "Huddle 10M" },
   College: { label: "Huddle apa?", placeholder: "TEH, SSM" },
   Cool: { label: "Cool apa?", placeholder: "Cool PIM 5" },
-  "Luar komunitas": null,
+  "Belum bergabung": null,
 };
 
 // Titik + label kategori (selaras emoji di form: biru/oranye/ungu).
@@ -16,15 +16,15 @@ export const CATEGORY_STYLE: Record<Category, string> = {
   Youth: "bg-sky-400 text-sky-300",
   College: "bg-orange-400 text-orange-300",
   Cool: "bg-fuchsia-400 text-fuchsia-300",
-  "Luar komunitas": "bg-lime-300 text-lime-200",
+  "Belum bergabung": "bg-lime-300 text-lime-200",
 };
 
-// Logo komunitas (public/logo). Luar komunitas tidak punya logo.
+// Logo komunitas (public/logo). Belum bergabung tidak punya logo.
 export const CATEGORY_LOGO: Record<Category, string | null> = {
   Youth: "/logo/youth.png",
   College: "/logo/college.png",
   Cool: "/logo/cool.png",
-  "Luar komunitas": null,
+  "Belum bergabung": null,
 };
 
 export const FORM_URL = "https://forms.gle/nCCyMemwBSW7J7Gp9";
