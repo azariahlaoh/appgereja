@@ -18,7 +18,7 @@ function Column({ ids, dir }: { ids: number[]; dir: "up" | "down" }) {
                 src={`/bg/${id}.jpg`}
                 alt=""
                 decoding="async"
-                className="w-full rounded-2xl object-cover"
+                className="w-full rounded-2xl object-cover shadow-[0_18px_40px_-10px_rgba(0,0,0,0.8)]"
               />
             ))}
           </div>
@@ -30,15 +30,27 @@ function Column({ ids, dir }: { ids: number[]; dir: "up" | "down" }) {
 
 export default function PhotoBackground() {
   return (
-    <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-[#05060a]">
-      <div className="absolute inset-x-0 -top-2 bottom-0 grid grid-cols-2 gap-3 px-3 opacity-[0.34] saturate-[0.85]">
-        <Column ids={LEFT} dir="up" />
-        <Column ids={RIGHT} dir="down" />
+    <>
+      <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-[#05060a]">
+        {/* Bidang foto dimiringkan dalam perspektif 3D */}
+        <div className="absolute inset-0" style={{ perspective: "900px", perspectiveOrigin: "50% 40%" }}>
+          <div
+            className="absolute -inset-x-[22%] -inset-y-[30%] grid grid-cols-2 gap-5 px-3 opacity-[0.4] saturate-[0.85]"
+            style={{ transform: "rotateX(22deg) rotateY(-16deg) rotateZ(6deg) scale(1.15)" }}
+          >
+            <Column ids={LEFT} dir="up" />
+            <div className="mt-24">
+              <Column ids={RIGHT} dir="down" />
+            </div>
+          </div>
+        </div>
+        {/* Gradient gelap + glow supaya teks tetap terbaca */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#05060a]/80 via-[#05060a]/35 to-[#05060a]/85" />
+        <div className="absolute -left-24 -top-24 h-96 w-96 rounded-full bg-lime/25 blur-[110px]" />
+        <div className="absolute -right-32 top-[28rem] h-96 w-96 rounded-full bg-sky-500/20 blur-[120px]" />
       </div>
-      {/* Gradient gelap + glow supaya teks tetap terbaca */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#05060a]/80 via-[#05060a]/40 to-[#05060a]/85" />
-      <div className="absolute -left-24 -top-24 h-96 w-96 rounded-full bg-lime/25 blur-[110px]" />
-      <div className="absolute -right-32 top-[28rem] h-96 w-96 rounded-full bg-sky-500/20 blur-[120px]" />
-    </div>
+      {/* Grain di atas semuanya (statis, tidak menghalangi klik) */}
+      <div aria-hidden className="grain pointer-events-none fixed inset-0 z-50" />
+    </>
   );
 }
